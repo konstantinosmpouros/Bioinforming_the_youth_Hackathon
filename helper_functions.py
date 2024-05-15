@@ -1,3 +1,4 @@
+import pandas as pd
 import tensorflow as tf
 
 from sklearn.metrics import classification_report
@@ -59,4 +60,46 @@ def model_accuracy(labels_test, predictions):
     return predictions
 
 
+def plot_history(history):
+    """
+    Plots the training loss and accuracy from the model history.
+
+    Parameters:
+    history: keras.callbacks.History
+        History object returned by the fit method of a Keras model.
+    """
+    # Extract loss and accuracy from the history object
+    loss = history.history['loss']
+    accuracy = history.history['accuracy']
+
+    epochs = range(1, len(loss) + 1)
+
+    # Create a figure and two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Plot loss
+    ax1.plot(epochs, loss, label='Training Loss')
+    ax1.set_title('Training Loss')
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('Loss')
+    ax1.legend()
+
+    # Plot accuracy
+    ax2.plot(epochs, accuracy, label='Training Accuracy')
+    ax2.set_title('Training Accuracy')
+    ax2.set_xlabel('Epochs')
+    ax2.set_ylabel('Accuracy')
+    ax2.legend()
+
+    # Show the plots
+    plt.tight_layout()
+    plt.show()
+
+
+def split_sequences(sequences, step):
+    splited_sequences = []
+    for seq in sequences:
+        splited = [seq[i:i+step] for i in range(0, len(seq), step)]
+        splited_sequences.append(splited)
+    return splited_sequences
 
