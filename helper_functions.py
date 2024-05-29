@@ -10,6 +10,28 @@ from sklearn.metrics import roc_curve, auc
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import tensorflow as tf
+from tensorflow.keras.layers import MultiHeadAttention, LayerNormalization, Dropout, Dense
+
+
+
+def transformer_block(x, num_heads, key_dim, block_num):
+    attention = MultiHeadAttention(num_heads=num_heads, key_dim=key_dim // num_heads, name=f'Attention_{block_num}')(x, x) 
+    attention = Dropout(0.1, name=f'Dropout1_b{block_num}')(attention)
+
+    attention = tf.cast(attention, dtype=tf.float16)
+    x = tf.cast(x, dtype=tf.float16) 
+    
+    x = LayerNormalization(epsilon=1e-6, name=f'LayerNorm1_{block_num}')(x + attention)
+    
+    dense = Dense(key_dim, activation='relu', name=f'Dense1_b{block_num}')(x)
+    dense = Dense(key_dim, activation='relu', name=f'Dense2_{block_num}')(dense)
+    
+    dense = Dropout(0.1, name=f'Dropout2_b{block_num}')(dense)
+    
+    x = LayerNormalization(epsilon=1e-6, name=f'LayerNorm2_{block_num}')(x + dense)
+
+    return x
 
 
 def class_report(labels_test, predictions):
