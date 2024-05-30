@@ -4,7 +4,7 @@ import tensorflow as tf
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.metrics import roc_curve, auc
 
 import seaborn as sns
@@ -75,8 +75,10 @@ def model_accuracy(labels_test, predictions):
     loss = tf.keras.losses.binary_crossentropy(labels_test, predictions).numpy().mean()
     predictions = tf.squeeze((predictions > 0.5).astype(int)).numpy()
     accuracy = accuracy_score(labels_test, predictions)
+    f1 = f1_score(labels_test, predictions)
 
     print('Accuracy: ', accuracy)
+    print('F1 Score: ', f1)
     print('Loss: ', loss)
     
     return predictions
