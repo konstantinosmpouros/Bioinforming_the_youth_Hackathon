@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Layer
 
 class PositionalEncoding(Layer):
     def __init__(self, position, d_model):
-        super(PositionalEncoding, self).__init__()
+        super().__init__(**kwargs)
         self.position = position
         self.d_model = d_model
         self.pos_encoding = self.positional_encoding(position, d_model)
